@@ -163,4 +163,35 @@ export class EventTicketService {
             throw new Error(`Failed to fetch event tickets: ${error instanceof Error ? error.message : 'Unknown error'}`);
         }
     }
+
+    /**
+     * Fetches trending event tickets
+     */
+    static async getTrendingEventTickets(): Promise<{ count: number; tickets: EventTicketResponse[] }> {
+        try {
+            // Trending logic: isTrending is true OR soldTickets > 100
+            const filter = {
+                $or: [
+                    { isTrending: true },
+                    { soldTickets: { $gt: 100 } }
+                ]
+            };
+
+            // Fetch trending tickets
+            const tickets = await EventTicket.find(filter)
+                .sort({ soldTickets: -1, updatedAt: -1 }) // Sort by popularity then freshness
+                .limit(5)
+                .lean();
+
+            // Transform tickets to response format
+            const transformedTickets = tickets.map(ticket => this.transformEventTicket(ticket as unknown as IEventTicket));
+
+            return {
+                count: transformedTickets.length,
+                tickets: transformedTickets
+            };
+        } catch (error) {
+            throw new Error(`Failed to fetch trending event tickets: ${error instanceof Error ? error.message : 'Unknown error'}`);
+        }
+    }
 }
