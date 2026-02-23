@@ -16,6 +16,7 @@ export interface IEventTicket extends Document {
     eventStatus: string; // upcoming, ongoing, completed, cancelled
     imageUrl: string; // image representing the event
     tags: string[]; // tags for better searchability
+    isTrending: boolean; // flag to indicate if the event is trending
 }
 
 const eventTicketSchema = new Schema<IEventTicket>({
@@ -34,6 +35,7 @@ const eventTicketSchema = new Schema<IEventTicket>({
     eventStatus: { type: String, required: true, enum: ['upcoming', 'ongoing', 'completed', 'cancelled'], default: 'upcoming' },
     imageUrl: { type: String, required: true },
     tags: [{ type: String }],
+    isTrending: { type: Boolean, default: false },
 }, { timestamps: true });
 
 const EventTicket = mongoose.model<IEventTicket>('EventTicket', eventTicketSchema);

@@ -30,7 +30,7 @@ export const getEventTickets: RequestHandler = async (req, res) => {
 
     } catch (error) {
         console.error('Error fetching event tickets:', error);
-        
+
         // Return error response
         res.status(500).json({
             error: 'Internal server error',
@@ -42,7 +42,7 @@ export const getEventTickets: RequestHandler = async (req, res) => {
 export const getEventTicketsByCategory: RequestHandler = async (req, res) => {
     try {
         // Extract category from params and pagination from query
-        const category = req.params.category;
+        const category = req.params.category as string;
         const page = parseInt(req.query.page as string) || 1;
         const limit = 8;
 
@@ -75,6 +75,25 @@ export const getEventTicketsByCategory: RequestHandler = async (req, res) => {
         res.status(500).json({
             error: 'Internal server error',
             message: error instanceof Error ? error.message : 'Failed to fetch event tickets by category'
+        });
+    }
+};
+
+export const getTrendingEventTickets: RequestHandler = async (req, res) => {
+    try {
+        // Fetch trending event tickets from service
+        const result = await EventTicketService.getTrendingEventTickets();
+
+        // Return success response
+        res.status(200).json(result);
+
+    } catch (error) {
+        console.error('Error fetching trending event tickets:', error);
+
+        // Return error response
+        res.status(500).json({
+            error: 'Internal server error',
+            message: error instanceof Error ? error.message : 'Failed to fetch trending event tickets'
         });
     }
 };
