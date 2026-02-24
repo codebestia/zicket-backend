@@ -1,10 +1,10 @@
-import { Router } from 'express';
-import {
-  getEventTickets,
-  getEventTicketsByCategory,
-} from '../controllers/event-ticket.controller';
+import { Router } from "express";
+import { getEventTickets, getEventTicketsByCategory, getTrendingEventTickets } from "../controllers/event-ticket.controller";
 
 const eventTicketRoutes = Router();
+
+// GET /api/event-tickets/trending - Fetch trending event tickets
+eventTicketRoutes.get('/trending', getTrendingEventTickets);
 
 // GET /api/event-tickets - Fetch paginated event tickets
 eventTicketRoutes.get('/', getEventTickets);
